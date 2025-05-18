@@ -4,32 +4,37 @@ import java.util.Random;
 import java.util.UUID;
 
 public class ActivitiesImpl implements Activities {
+    private static int intentos = 0;
+
     @Override
     public void validarSolicitud(String solicitud) {
-        System.out.println("[ValidarSolicitud] Validación exitosa.");
+        System.out.println("✔ Validación exitosa para solicitud: " + solicitud);
     }
 
     @Override
     public String solicitarFolio(String solicitud) {
-        System.out.println("[SolicitarFolio] Generando folio...");
-        return UUID.randomUUID().toString();
+        String folio = "FOLIO-" + System.currentTimeMillis();
+        System.out.println("✔ Folio generado: " + folio);
+        return folio;
     }
 
     @Override
     public void procesarPago(String folio) {
-        System.out.println("[ProcesarPago] Procesando pago con folio: " + folio);
-        if (new Random().nextBoolean()) { // Simula falla aleatoria
-            throw new RuntimeException("Fallo simulado en procesamiento de pago");
+        intentos++;
+        System.out.println("[Pago] Intento " + intentos + " para folio " + folio);
+        if (intentos == 1) {
+            throw new RuntimeException("⛔ Simulación de error en el procesamiento de pago");
         }
+        System.out.println("✔ Pago exitoso con folio: " + folio);
     }
 
     @Override
     public void rollback(String motivo) {
-        System.out.println("[Rollback] Ejecutando rollback: " + motivo);
+        System.out.println("🔁 Rollback ejecutado. Motivo: " + motivo);
     }
 
     @Override
     public void notificarResultado(String resultado) {
-        System.out.println("[NotificarResultado] " + resultado);
+        System.out.println("📬 Resultado notificado: " + resultado);
     }
 }
