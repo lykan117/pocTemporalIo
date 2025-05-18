@@ -1,14 +1,12 @@
 package com.poc.tcs.temporal;
 
 import com.poc.tcs.temporal.activities.Activities;
-import com.poc.tcs.temporal.activities.ActivitiesImpl;
 import com.poc.tcs.temporal.workflows.PagoTDCWorkflow;
 import com.poc.tcs.temporal.workflows.PagoTDCWorkflowImpl;
-import io.temporal.testing.TestWorkflowEnvironment;
-import io.temporal.worker.Worker;
-import io.temporal.worker.WorkerFactory;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
+import io.temporal.testing.TestWorkflowEnvironment;
+import io.temporal.worker.Worker;
 import org.junit.jupiter.api.*;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -35,61 +33,32 @@ public class PagoTDCWorkflowTest {
     }
 
     @Test
-    public void testWorkflowConExito() {
-        TestWorkflowEnvironment testEnv = TestWorkflowEnvironment.newInstance();
-        Worker worker = testEnv.newWorker("PAGO_TDC_TASK_QUEUE");
-        worker.registerWorkflowImplementationTypes(PagoTDCWorkflowImpl.class);
-        worker.registerActivitiesImplementations(new ActivitiesImpl());
-        testEnv.start();
-
-        WorkflowClient client = testEnv.getWorkflowClient();
-        PagoTDCWorkflow workflow = client.newWorkflowStub(PagoTDCWorkflow.class, WorkflowOptions.newBuilder().setTaskQueue("PAGO_TDC_TASK_QUEUE").build());
-
-        workflow.ejecutarPago("Solicitud de prueba");
-
-        testEnv.close();
+    public void testExitoDirecto() {
+        System.out.println("🟢 TEST: Éxito sin error");
+        MockActivities.setModo("EXITO");
+        ejecutar("CASO_EXITO");
     }
 
+    @Test
+    public void testRetryYExito() {
+        System.out.println("🟡 TEST: Fallo inicial, éxito en retry");
+        MockActivities.setModo("FALLO_TRANSITORIO");
+        ejecutar("CASO_REINTENTO");
+    }
 
     @Test
-    public void testWorkflowConRollbackSimulado() {
+    public void testFalloYRollback() {
+        System.out.println("🔴 TEST: Fallo total, se ejecuta rollback");
+        MockActivities.setModo("FALLO_FATAL");
+        ejecutar("CASO_FALLO");
+    }
+
+    private void ejecutar(String solicitud) {
         PagoTDCWorkflow workflow = client.newWorkflowStub(
                 PagoTDCWorkflow.class,
                 WorkflowOptions.newBuilder().setTaskQueue("PAGO_TDC_TASK_QUEUE").build()
         );
-
-        workflow.ejecutarPago("Prueba Unitaria");
+        workflow.ejecutarPago(solicitud);
     }
 
-    public static class MockActivities implements Activities {
-        private AtomicInteger intentos = new AtomicInteger(0);
-
-        @Override
-        public void validarSolicitud(String solicitud) {
-            System.out.println("Validación exitosa para " + solicitud);
-        }
-
-        @Override
-        public String solicitarFolio(String solicitud) {
-            return "TEST-FOLIO";
-        }
-
-        @Override
-        public void procesarPago(String folio) {
-            if (intentos.incrementAndGet() < 2) {
-                throw new RuntimeException("Fallo simulado");
-            }
-            System.out.println("Pago exitoso en test para folio " + folio);
-        }
-
-        @Override
-        public void rollback(String motivo) {
-            System.out.println("Rollback ejecutado en test: " + motivo);
-        }
-
-        @Override
-        public void notificarResultado(String resultado) {
-            System.out.println("Notificado: " + resultado);
-        }
-    }
 }
