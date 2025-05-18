@@ -1,6 +1,7 @@
 package com.poc.tcs.temporal;
 
 import com.poc.tcs.temporal.activities.Activities;
+import com.poc.tcs.temporal.activities.ActivitiesImpl;
 import com.poc.tcs.temporal.workflows.PagoTDCWorkflow;
 import com.poc.tcs.temporal.workflows.PagoTDCWorkflowImpl;
 import io.temporal.testing.TestWorkflowEnvironment;
@@ -32,6 +33,23 @@ public class PagoTDCWorkflowTest {
     public void teardown() {
         testEnv.close();
     }
+
+    @Test
+    public void testWorkflowConExito() {
+        TestWorkflowEnvironment testEnv = TestWorkflowEnvironment.newInstance();
+        Worker worker = testEnv.newWorker("PAGO_TDC_TASK_QUEUE");
+        worker.registerWorkflowImplementationTypes(PagoTDCWorkflowImpl.class);
+        worker.registerActivitiesImplementations(new ActivitiesImpl());
+        testEnv.start();
+
+        WorkflowClient client = testEnv.getWorkflowClient();
+        PagoTDCWorkflow workflow = client.newWorkflowStub(PagoTDCWorkflow.class, WorkflowOptions.newBuilder().setTaskQueue("PAGO_TDC_TASK_QUEUE").build());
+
+        workflow.ejecutarPago("Solicitud de prueba");
+
+        testEnv.close();
+    }
+
 
     @Test
     public void testWorkflowConRollbackSimulado() {

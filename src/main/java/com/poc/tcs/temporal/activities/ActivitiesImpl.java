@@ -1,7 +1,8 @@
 package com.poc.tcs.temporal.activities;
 
-import java.util.Random;
-import java.util.UUID;
+import com.poc.tcs.temporal.exception.PagoException;
+
+
 
 public class ActivitiesImpl implements Activities {
     private static int intentos = 0;
@@ -25,6 +26,11 @@ public class ActivitiesImpl implements Activities {
         if (intentos == 1) {
             throw new RuntimeException("⛔ Simulación de error en el procesamiento de pago");
         }
+        boolean fallo = true;
+        if (fallo) {
+            throw new RuntimeException("Simulación de error");
+        }
+
         System.out.println("✔ Pago exitoso con folio: " + folio);
     }
 
