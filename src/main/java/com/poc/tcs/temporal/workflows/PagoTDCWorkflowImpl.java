@@ -38,30 +38,5 @@ public class PagoTDCWorkflowImpl implements PagoTDCWorkflow {
         }
     }
 
-//    @Override
-//    public void ejecutarPago(String solicitud) {
-//        try {
-//            activities.validarSolicitud(solicitud);
-//            String folio = activities.solicitarFolio(solicitud);
-//            activities.procesarPago(folio);
-//            activities.notificarResultado("Pago exitoso con folio: " + folio);
-//        } catch (Exception e) {
-//            activities.rollback("Fallo en pago para solicitud " + solicitud + ": " + e.getMessage());
-//            activities.notificarResultado("Pago fallido. Se ejecutó rollback.");
-//        }
-//    }
 
-
-//    @Override
-//    public void ejecutarPago(String datosSolicitud) {
-//        try {
-//            activities.validarSolicitud(datosSolicitud);
-//            String folio = activities.solicitarFolio(datosSolicitud);
-//            activities.procesarPago(folio);
-//            activities.notificarResultado("Pago Exitoso");
-//        } catch (Exception e) {
-//            activities.rollback("Reversando pago debido a error: " + e.getMessage());
-//            activities.notificarResultado("Error en el pago: " + e.getMessage());
-//        }
-//   }
 }
