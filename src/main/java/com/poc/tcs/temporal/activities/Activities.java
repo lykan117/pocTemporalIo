@@ -19,4 +19,5 @@ public interface Activities {
 
     @ActivityMethod
     void notificarResultado(String resultado);
+
 }

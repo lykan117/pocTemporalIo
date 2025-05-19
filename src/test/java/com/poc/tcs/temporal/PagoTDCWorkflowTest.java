@@ -34,21 +34,21 @@ public class PagoTDCWorkflowTest {
 
     @Test
     public void testExitoDirecto() {
-        System.out.println("🟢 TEST: Éxito sin error");
+        System.out.println("TEST: Éxito sin error");
         MockActivities.setModo("EXITO");
         ejecutar("CASO_EXITO");
     }
 
     @Test
     public void testRetryYExito() {
-        System.out.println("🟡 TEST: Fallo inicial, éxito en retry");
+        System.out.println("TEST: Fallo inicial, éxito en retry");
         MockActivities.setModo("FALLO_TRANSITORIO");
         ejecutar("CASO_REINTENTO");
     }
 
     @Test
     public void testFalloYRollback() {
-        System.out.println("🔴 TEST: Fallo total, se ejecuta rollback");
+        System.out.println("TEST: Fallo total, se ejecuta rollback");
         MockActivities.setModo("FALLO_FATAL");
         ejecutar("CASO_FALLO");
     }

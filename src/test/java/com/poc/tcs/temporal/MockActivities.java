@@ -15,7 +15,7 @@ public class MockActivities implements Activities {
 
     @Override
     public void validarSolicitud(String solicitud) {
-        System.out.println("✔ Validación exitosa: " + solicitud);
+        System.out.println("Validación exitosa: " + solicitud);
     }
 
     @Override
@@ -30,23 +30,23 @@ public class MockActivities implements Activities {
 
         switch (modo) {
             case "FALLO_TRANSITORIO":
-                if (intento == 1) throw new RuntimeException("❌ Fallo temporal");
+                if (intento == 1) throw new RuntimeException("Fallo temporal");
                 break;
             case "FALLO_FATAL":
-                throw new RuntimeException("💥 Fallo permanente");
+                throw new RuntimeException("Fallo permanente");
         }
 
-        System.out.println("✅ Pago exitoso para folio: " + folio);
+        System.out.println("Pago exitoso para folio: " + folio);
     }
 
     @Override
     public void rollback(String motivo) {
-        System.out.println("🔁 Rollback ejecutado: " + motivo);
+        System.out.println("Rollback ejecutado: " + motivo);
     }
 
     @Override
     public void notificarResultado(String resultado) {
-        System.out.println("📣 Resultado notificado: " + resultado);
+        System.out.println("Resultado notificado: " + resultado);
     }
 
 }
